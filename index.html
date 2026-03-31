@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noise Instrument / 25 Buttons</title>
+  <title>Soundscape</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 24px;
-      box-sizing: border-box;
-      background: #0b0b0b;
-      color: white;
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
+      background: #050805;
+      color: #b8ffb8;
+      font-family: "Courier New", monospace;
     }
 
     .top {
@@ -26,26 +25,28 @@
       flex-wrap: wrap;
       margin-bottom: 24px;
       padding-bottom: 18px;
-      
+      border-bottom: 1px solid rgba(120,255,120,0.2);
     }
 
     h1 {
       margin: 0 0 12px 0;
-      font-size: 72px;
-      line-height: 0.92;
-      letter-spacing: 3px;
+      font-size: 78px;
+      line-height: 0.9;
+      letter-spacing: 6px;
       text-transform: uppercase;
+      color: #9cff9c;
+      text-shadow: 0 0 8px rgba(120,255,120,0.35);
     }
 
     p {
       margin: 0;
       max-width: 760px;
-      color: #cfcfcf;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      line-height: 1.4;
+      color: #8cff8c;
+      font-size: 13px;
+      line-height: 1.5;
       letter-spacing: 1px;
       text-transform: uppercase;
+      opacity: 0.9;
     }
 
     .controls {
@@ -56,20 +57,21 @@
 
     .controls button {
       background: transparent;
-      color: white;
-      border: 1px solid white;
+      color: #8cff8c;
+      border: 1px solid #8cff8c;
       padding: 12px 18px;
       border-radius: 999px;
       cursor: pointer;
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      font-family: "Courier New", monospace;
       transition: 0.2s;
+      box-shadow: 0 0 10px rgba(120,255,120,0.1);
     }
 
     .controls button:hover {
-      background: white;
+      background: #8cff8c;
       color: black;
     }
 
@@ -81,20 +83,21 @@
     }
 
     .sound {
-      border: 1px solid #2f2f2f;
-      background: #111111;
-      color: white;
+      border: 1px solid rgba(120,255,120,0.25);
+      background: #081108;
+      color: #b8ffb8;
       min-height: 110px;
       padding: 18px;
       cursor: pointer;
       text-align: left;
       transition: transform 0.2s, background 0.2s, border 0.2s, opacity 0.2s, box-shadow 0.2s;
-      border-radius: 18px;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(120,255,120,0.05), 0 0 18px rgba(0,255,120,0.05);
     }
 
     .sound::before {
@@ -104,7 +107,7 @@
       top: 0;
       width: 70%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      background: linear-gradient(90deg, transparent, rgba(140,255,140,0.12), transparent);
       transform: skewX(-20deg);
       transition: 0.4s;
       pointer-events: none;
@@ -115,15 +118,15 @@
     }
 
     .sound:hover {
-      background: #1d1d1d;
-      border-color: white;
+      background: #0d180d;
+      border-color: #8cff8c;
+      box-shadow: inset 0 0 0 1px rgba(140,255,140,0.15), 0 0 20px rgba(140,255,140,0.12);
     }
 
     .sound.on {
-      background: white;
+      background: #8cff8c;
       color: black;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
-      animation: floaty 1.8s infinite alternate;
+      box-shadow: 0 0 20px rgba(140,255,140,0.35);
     }
 
     .sound.muted {
@@ -132,102 +135,68 @@
     }
 
     .sound.preview {
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+      box-shadow: 0 0 0 2px rgba(140,255,140,0.4);
     }
 
     .num {
       font-size: 11px;
       margin-bottom: 10px;
       opacity: 0.7;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      color: #72d872;
     }
 
     .name {
-      font-size: 24px;
+      font-size: 22px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      line-height: 0.95;
+      letter-spacing: 2px;
+      line-height: 1;
       word-break: break-word;
     }
 
     .type {
       margin-top: 8px;
-      font-size: 11px;
-      opacity: 0.7;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 1px;
+      font-size: 10px;
+      opacity: 0.75;
+      letter-spacing: 2px;
       text-transform: uppercase;
+      color: #72d872;
     }
 
     .w1 { border-radius: 2px; min-height: 170px; grid-row: span 2; }
     .w2 { border-radius: 30px; }
     .w3 { min-height: 140px; grid-column: span 2; }
-    .w4 .name { font-size: 38px; }
+    .w4 .name { font-size: 30px; }
     .w5 { min-height: 180px; }
-    .w6 {}
     .w7 { border-style: dashed; grid-column: span 2; }
     .w8 { border-width: 2px; min-height: 160px; }
     .w9 { text-align: center; align-items: center; justify-content: center; }
     .w10 { background: #1a1a1a; grid-row: span 2; }
     .w11 { min-height: 90px; }
-    .w12 {}
     .w13 { padding-top: 34px; min-height: 180px; }
     .w14 { justify-content: center; min-height: 200px; }
     .w15 .name { letter-spacing: 4px; }
     .w16 { border-radius: 50px 10px 50px 10px; grid-column: span 2; }
     .w17 { background: #0d0d0d; min-height: 170px; }
-    .w18 { border-left: 8px solid white; }
-    .w19 { border-right: 8px solid white; min-height: 180px; }
+    .w18 { border-left: 8px solid #8cff8c; }
+    .w19 { border-right: 8px solid #8cff8c; min-height: 180px; }
     .w20 { min-height: 150px; grid-column: span 2; }
     .w21 .num { font-size: 18px; }
-    .w22 .name { font-style: italic; font-size: 30px; }
-    .w23 { box-shadow: inset 0 0 0 1px #444; }
-    .w24 { border-top: 6px solid white; min-height: 170px; }
-    .w25 { border-bottom: 6px solid white; grid-column: span 2; min-height: 200px; }
-    .w26 { min-height: 140px; }
-    .w27 { min-height: 160px; grid-column: span 2; }
-    .w28 { min-height: 120px; }
+    .w22 .name { font-size: 26px; }
+    .w23 { box-shadow: inset 0 0 0 1px rgba(120,255,120,0.18); }
+    .w24 { border-top: 6px solid #8cff8c; min-height: 170px; }
+    .w25 { border-bottom: 6px solid #8cff8c; grid-column: span 2; min-height: 200px; }
 
-    .shake:hover { animation: shaky 0.18s infinite; }
-    .spin:hover { animation: spinny 0.7s linear infinite; }
+    .shake:hover { transform: translateX(-4px) scale(1.02); }
+    .spin:hover { transform: skewX(-10deg) scale(1.03); }
     .tall:hover { transform: scaleY(1.08) scaleX(1.02); }
     .wide:hover { transform: scaleX(1.08) scaleY(1.02); }
-    .blinker:hover { animation: blinky 0.5s infinite; }
-    .jump:hover { animation: jumpy 0.35s infinite alternate; }
-    .ghost:hover { opacity: 0.55; }
+    .blinker:hover { opacity: 0.55; }
+    .jump:hover { transform: translateY(-8px) scale(1.04); }
+    .ghost:hover { opacity: 0.4; }
     .borderpop:hover { border-width: 4px; }
-    .slant:hover { transform: rotate(-4deg) scale(1.03); }
-    .reverse:hover { transform: rotate(4deg) scale(1.03); }
-
-    @keyframes shaky {
-      0% { transform: translateX(0px) rotate(0deg); }
-      25% { transform: translateX(-2px) rotate(-1deg); }
-      50% { transform: translateX(2px) rotate(1deg); }
-      75% { transform: translateX(-1px) rotate(-1deg); }
-      100% { transform: translateX(1px) rotate(1deg); }
-    }
-
-    @keyframes spinny {
-      from { transform: rotate(0deg) scale(1.03); }
-      to { transform: rotate(360deg) scale(1.03); }
-    }
-
-    @keyframes blinky {
-      0% { opacity: 1; }
-      50% { opacity: 0.4; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes jumpy {
-      from { transform: translateY(0px) scale(1.02); }
-      to { transform: translateY(-8px) scale(1.04); }
-    }
-
-    @keyframes floaty {
-      from { transform: scale(0.96) rotate(-1deg) translateY(0px); }
-      to { transform: scale(0.98) rotate(1deg) translateY(-4px); }
-    }
+    .slant:hover { transform: skewY(-6deg) scale(1.03); }
+    .reverse:hover { transform: translateX(6px) scale(1.03); }
 
     @media (max-width: 1000px) {
       .grid {
@@ -235,7 +204,7 @@
       }
 
       h1 {
-        font-size: 54px;
+        font-size: 56px;
       }
 
       .w3, .w7, .w16, .w20, .w25 {
@@ -249,7 +218,7 @@
       }
 
       h1 {
-        font-size: 42px;
+        font-size: 44px;
       }
     }
 
@@ -271,7 +240,7 @@
 <body>
   <div class="top">
     <div>
-      <h1>Noise Instrument<br>25 Buttons</h1>
+      <h1>Soundscape</h1>
       <p>RELEASING FRAGMENTS OF SOUND THAT LAYER, SHIFT, AND RECOMBINE. NOTHING IS FIXED OR COMPLETE, IT BEHAVES LIKE AN OPEN SYSTEM, WHERE SMALL INPUTS ACCUMULATE IN AN UNSTABLE, IMMERSIVE, AND CONSTANTLY CHANGING SPACE.</p>
     </div>
     <div class="controls">
@@ -294,34 +263,31 @@
     var randomPlay = document.getElementById('randomPlay');
 
     var data = [
-      { n: 'sub floor', t: 'bass / drone', f: 58 },
-      { n: 'soft hum', t: 'ambient / low', f: 96 },
-      { n: 'slow pulse', t: 'pulse / beat', f: 132 },
-      { n: 'glass wire', t: 'bright / thin', f: 690 },
-      { n: 'air leak', t: 'noise / breath', f: 210 },
-      { n: 'metal hit', t: 'pulse / hard', f: 275 },
-      { n: 'echo line', t: 'mid / loop', f: 318 },
-      { n: 'ring beam', t: 'bright / ring', f: 520 },
-      { n: 'micro tick', t: 'click / small', f: 448 },
-      { n: 'tv static', t: 'noise / grain', f: 180 },
-      { n: 'deep bass', t: 'bass / floor', f: 68 },
-      { n: 'wind room', t: 'air / drift', f: 238 },
-      { n: 'wire skin', t: 'thin / high', f: 612 },
-      { n: 'drop tone', t: 'soft / hit', f: 226 },
-      { n: 'void mass', t: 'drone / long', f: 88 },
-      { n: 'blink code', t: 'pulse / quick', f: 386 },
-      { n: 'warm wave', t: 'ambient / soft', f: 172 },
-      { n: 'plain tone', t: 'mid / stable', f: 348 },
-      { n: 'spark dust', t: 'bright / short', f: 742 },
-      { n: 'heavy floor', t: 'bass / weight', f: 64 },
-      { n: 'faded trace', t: 'mid / ghost', f: 474 },
-      { n: 'sharp hiss', t: 'noise / edge', f: 284 },
-      { n: 'night loop', t: 'dark / drone', f: 118 },
-      { n: 'coil room', t: 'electric / hum', f: 206 },
-      { n: 'beam line', t: 'high / long', f: 860 },
-      { n: 'extra low', t: 'bass add', f: 52 },
-      { n: 'extra mid', t: 'mid add', f: 300 },
-      { n: 'extra high', t: 'high add', f: 900 }
+      { n: 'LOW HUM', t: 'BASS LAYER', f: 58 },
+      { n: 'ROOM TONE', t: 'AMBIENT LOOP', f: 96 },
+      { n: 'SLOW BEAT', t: 'PULSE LOOP', f: 132 },
+      { n: 'HIGH SIGNAL', t: 'BRIGHT TONE', f: 690 },
+      { n: 'AIR FLOW', t: 'NOISE LAYER', f: 210 },
+      { n: 'METAL TAP', t: 'HARD PULSE', f: 275 },
+      { n: 'MID WAVE', t: 'MID LOOP', f: 318 },
+      { n: 'RING NOTE', t: 'BRIGHT LOOP', f: 520 },
+      { n: 'CLICK TRACK', t: 'SMALL PULSE', f: 448 },
+      { n: 'STATIC BED', t: 'GRAIN NOISE', f: 180 },
+      { n: 'DEEP FLOOR', t: 'LOW DRONE', f: 68 },
+      { n: 'SOFT WIND', t: 'AIR LOOP', f: 238 },
+      { n: 'THIN LINE', t: 'HIGH TONE', f: 612 },
+      { n: 'DROP HIT', t: 'SOFT HIT', f: 226 },
+      { n: 'DARK DRONE', t: 'LONG LAYER', f: 88 },
+      { n: 'FAST PULSE', t: 'QUICK LOOP', f: 386 },
+      { n: 'WARM PAD', t: 'SOFT AMBIENT', f: 172 },
+      { n: 'CENTER TONE', t: 'STABLE MID', f: 348 },
+      { n: 'SHARP FLASH', t: 'BRIGHT EDGE', f: 742 },
+      { n: 'HEAVY BASS', t: 'WEIGHT LOOP', f: 64 },
+      { n: 'FADE LINE', t: 'GHOST MID', f: 474 },
+      { n: 'HISS NOISE', t: 'SHARP TEXTURE', f: 284 },
+      { n: 'NIGHT LOOP', t: 'DARK AMBIENT', f: 118 },
+      { n: 'ELECTRIC HUM', t: 'HUM LOOP', f: 206 },
+      { n: 'LASER TONE', t: 'LONG HIGH', f: 860 }
     ];
 
     var stuff = [];
@@ -346,17 +312,6 @@
         previewOsc.stop();
         previewOsc = null;
         previewGain = null;
-      }
-    }
-
-     else if (one.el.classList.contains('shake')) {
-        one.el.classList.remove('shake');
-        one.el.classList.add('spin');
-      } else if (one.el.classList.contains('spin')) {
-        one.el.classList.remove('spin');
-        one.el.classList.add('jump');
-      } else {
-        one.el.classList.add('reverse');
       }
     }
 
@@ -531,8 +486,6 @@
         }
       });
 
-      
-
       b.addEventListener('click', function() {
         if (ctx && ctx.state === 'suspended') {
           ctx.resume();
@@ -576,4 +529,3 @@
   </script>
 </body>
 </html>
-
