@@ -81,6 +81,23 @@
       overflow: hidden;
     }
 
+    .sound::before {
+      content: '';
+      position: absolute;
+      left: -120%;
+      top: 0;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      transform: skewX(-20deg);
+      transition: 0.4s;
+      pointer-events: none;
+    }
+
+    .sound:hover::before {
+      left: 140%;
+    }
+
     .sound:hover {
       transform: translateY(-6px) scale(1.02);
       border-color: white;
@@ -138,16 +155,58 @@
     .sound.w24 { border-top: 6px solid white; }
     .sound.w25 { border-bottom: 6px solid white; }
 
+    .sound.shake:hover { animation: shaky 0.18s infinite; }
+    .sound.spin:hover { animation: spinny 0.7s linear infinite; }
+    .sound.tall:hover { transform: scaleY(1.08) scaleX(1.02); }
+    .sound.wide:hover { transform: scaleX(1.08) scaleY(1.02); }
+    .sound.blinker:hover { animation: blinky 0.5s infinite; }
+    .sound.jump:hover { animation: jumpy 0.35s infinite alternate; }
+    .sound.ghost:hover { opacity: 0.55; }
+    .sound.borderpop:hover { border-width: 4px; }
+    .sound.slant:hover { transform: rotate(-4deg) scale(1.03); }
+    .sound.reverse:hover { transform: rotate(4deg) scale(1.03); }
+
     .sound.on .type,
     .sound.on .num {
       opacity: 1;
     }
 
-    .info {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #a0a0a0;
-      line-height: 1.6;
+    .sound.muted {
+      opacity: 0.28;
+      filter: blur(1px);
+    }
+
+    .sound.preview {
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+    }
+
+    @keyframes shaky {
+      0% { transform: translateX(0px) rotate(0deg); }
+      25% { transform: translateX(-2px) rotate(-1deg); }
+      50% { transform: translateX(2px) rotate(1deg); }
+      75% { transform: translateX(-1px) rotate(-1deg); }
+      100% { transform: translateX(1px) rotate(1deg); }
+    }
+
+    @keyframes spinny {
+      from { transform: rotate(0deg) scale(1.03); }
+      to { transform: rotate(360deg) scale(1.03); }
+    }
+
+    @keyframes blinky {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes jumpy {
+      from { transform: translateY(0px) scale(1.02); }
+      to { transform: translateY(-8px) scale(1.04); }
+    }
+
+    @keyframes floaty {
+      from { transform: scale(0.96) rotate(-1deg) translateY(0px); }
+      to { transform: scale(0.98) rotate(1deg) translateY(-4px); }
     }
 
     @media (max-width: 1000px) {
@@ -228,10 +287,24 @@
     ];
 
     var stuff = [];
+    var previewOsc = null;
+    var previewGain = null;
 
     function makeOne(item, i) {
       var b = document.createElement('button');
       b.className = 'sound w' + (i + 1);
+
+      if (i % 10 === 0) b.className += ' shake';
+      if (i % 10 === 1) b.className += ' spin';
+      if (i % 10 === 2) b.className += ' tall';
+      if (i % 10 === 3) b.className += ' wide';
+      if (i % 10 === 4) b.className += ' blinker';
+      if (i % 10 === 5) b.className += ' jump';
+      if (i % 10 === 6) b.className += ' ghost';
+      if (i % 10 === 7) b.className += ' borderpop';
+      if (i % 10 === 8) b.className += ' slant';
+      if (i % 10 === 9) b.className += ' reverse';
+
       b.innerHTML = '<div class="num">' + (i + 1) + '/25</div><div class="name">' + item.n + '</div><div class="type">' + item.t + '</div>';
       grid.appendChild(b);
 
@@ -250,12 +323,27 @@
       };
 
       b.addEventListener('mouseenter', function() {
-        b.style.transform = 'scale(1.05) rotate(' + (Math.random()*4-2) + 'deg)';
+        b.classList.add('preview');
+
+        if (!one.on) {
+          quickPreview(one.item.f);
+        }
+
+        if (one.i % 5 === 0) {
+          for (var k = 0; k < stuff.length; k++) {
+            if (stuff[k] !== one && !stuff[k].on) {
+              stuff[k].el.classList.add('muted');
+            }
+          }
+        }
       });
 
       b.addEventListener('mouseleave', function() {
-        if (!one.on) {
-          b.style.transform = '';
+        b.classList.remove('preview');
+        stopPreview();
+
+        for (var k = 0; k < stuff.length; k++) {
+          stuff[k].el.classList.remove('muted');
         }
       });
 
@@ -267,6 +355,11 @@
         if (!one.on) {
           b.style.transform = '';
         }
+      });
+
+      b.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        crazyToggle(one);
       });
 
       b.addEventListener('click', function() {
@@ -283,6 +376,41 @@
 
       stuff.push(one);
     }
+    }
+
+    function quickPreview(f) {
+      stopPreview();
+      previewOsc = ctx.createOscillator();
+      previewGain = ctx.createGain();
+      previewOsc.type = 'sine';
+      previewOsc.frequency.value = f;
+      previewGain.gain.value = 0.012;
+      previewOsc.connect(previewGain);
+      previewGain.connect(ctx.destination);
+      previewOsc.start();
+    }
+
+    function stopPreview() {
+      if (previewOsc) {
+        previewOsc.stop();
+        previewOsc = null;
+        previewGain = null;
+      }
+    }
+
+    function crazyToggle(one) {
+      if (one.el.classList.contains('reverse')) {
+        one.el.classList.remove('reverse');
+        one.el.classList.add('shake');
+      } else if (one.el.classList.contains('shake')) {
+        one.el.classList.remove('shake');
+        one.el.classList.add('spin');
+      } else if (one.el.classList.contains('spin')) {
+        one.el.classList.remove('spin');
+        one.el.classList.add('jump');
+      } else {
+        one.el.classList.add('reverse');
+      }
     }
 
     function playSound(one) {
@@ -380,4 +508,5 @@
   </script>
 </body>
 </html>
+
 
