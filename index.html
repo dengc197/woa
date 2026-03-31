@@ -82,14 +82,16 @@
     }
 
     .sound:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px) scale(1.02);
       border-color: white;
+      background: #222;
     }
 
     .sound.on {
       background: white;
       color: black;
-      transform: scale(0.98);
+      transform: scale(0.96) rotate(1deg);
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
     }
 
     .sound .num {
@@ -187,7 +189,7 @@
   <div class="grid" id="grid"></div>
 
   <div class="info">
-    Best with headphones. Some browsers need one click first before audio works.
+    
   </div>
 
   <script>
@@ -247,6 +249,26 @@
         i: i
       };
 
+      b.addEventListener('mouseenter', function() {
+        b.style.transform = 'scale(1.05) rotate(' + (Math.random()*4-2) + 'deg)';
+      });
+
+      b.addEventListener('mouseleave', function() {
+        if (!one.on) {
+          b.style.transform = '';
+        }
+      });
+
+      b.addEventListener('mousedown', function() {
+        b.style.transform = 'scale(0.92)';
+      });
+
+      b.addEventListener('mouseup', function() {
+        if (!one.on) {
+          b.style.transform = '';
+        }
+      });
+
       b.addEventListener('click', function() {
         if (ctx.state === 'suspended') {
           ctx.resume();
@@ -260,6 +282,7 @@
       });
 
       stuff.push(one);
+    }
     }
 
     function playSound(one) {
